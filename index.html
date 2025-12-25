@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudNotes | 2026 隐私加密笔记</title>
+    <title>CloudNotes | 2026 隱私加密筆記</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#020617">
@@ -43,7 +43,7 @@
             background: rgba(30, 41, 59, 0.9);
         }
 
-        /* 隐藏滚动条但保留功能 */
+        /* 隱藏滾動條但保留功能 */
         ::-webkit-scrollbar {
             width: 0px;
         }
@@ -55,20 +55,20 @@
         <!-- 动态加载区 -->
     </div>
 
-    <!-- 极简设置弹窗 -->
+    <!-- 極簡設置彈窗 -->
     <div id="settingsModal"
         class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
         <div class="glass w-full max-w-sm p-8 rounded-[2.5rem] shadow-2xl space-y-6">
-            <h2 class="text-2xl font-extrabold tracking-tight">⚙️ 系统配置</h2>
+            <h2 class="text-2xl font-extrabold tracking-tight">⚙️ 系統配置</h2>
             <div class="space-y-4">
                 <div class="space-y-1">
                     <label class="text-[10px] uppercase tracking-widest text-slate-400 font-bold ml-1">Worker
-                        服务地址</label>
+                        服務地址</label>
                     <input id="setApi" type="text" placeholder="https://..."
                         class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-blue-500/50 text-sm transition-all">
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] uppercase tracking-widest text-slate-400 font-bold ml-1">管理员密钥</label>
+                    <label class="text-[10px] uppercase tracking-widest text-slate-400 font-bold ml-1">管理員密鑰</label>
                     <input id="setKey" type="password" placeholder="••••••••"
                         class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-2xl outline-none focus:ring-2 ring-blue-500/50 text-sm transition-all">
                 </div>
@@ -130,7 +130,7 @@
                 <div class="inline-flex p-5 bg-blue-500/10 rounded-full text-5xl">🛡️</div>
                 <div class="space-y-2">
                     <h1 class="text-4xl font-extrabold tracking-tight italic">CloudNotes</h1>
-                    <p class="text-slate-400 leading-relaxed">您的专属分布式加密笔记系统<br>请先关联您的 Cloudflare Worker 后端</p>
+                    <p class="text-slate-400 leading-relaxed">您的專屬分佈式加密筆記系統<br>請先關聯您的 Cloudflare Worker 後端</p>
                 </div>
                 <button onclick="configUrl()" class="px-10 py-5 gradient-btn text-white font-black rounded-3xl shadow-2xl">初始化配置</button>
             </div>
@@ -138,37 +138,49 @@
         }
 
         function renderMainView() {
+            app.classList.remove('max-w-3xl');
+            app.classList.add('max-w-[90rem]'); // Expand container width
+
             app.innerHTML = `
-            <div class="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <header class="flex justify-between items-end">
-                    <div class="space-y-1">
-                        <h1 class="text-4xl font-extrabold tracking-tighter bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent">CloudNotes</h1>
-                        <p class="text-[10px] uppercase tracking-[0.3em] text-blue-500 font-black">端到端加密保险库</p>
-                    </div>
-                    <button onclick="configUrl()" class="p-4 glass rounded-2xl hover:rotate-180 transition-all duration-500 text-xl">⚙️</button>
-                </header>
-
-                <main class="glass p-8 rounded-[2.5rem] shadow-2xl space-y-6 border-white/5">
-                    <input id="mainPw" type="password" placeholder="设置解密主密码 (Passkey)" class="w-full bg-slate-950/50 border border-slate-800 p-5 rounded-2xl outline-none focus:ring-2 ring-blue-500/50 transition-all font-mono">
-                    <textarea id="noteInput" placeholder="在此输入私人内容..." class="w-full bg-slate-950/50 border border-slate-800 p-5 h-48 rounded-2xl outline-none focus:bg-slate-950 transition-all resize-none leading-relaxed"></textarea>
-                    <div class="grid grid-cols-2 gap-4">
-                        <button onclick="doSave()" class="gradient-btn text-white py-5 rounded-2xl font-black tracking-widest uppercase text-xs">加密存入云端</button>
-                        <button onclick="doAI()" class="glass text-purple-400 py-5 rounded-2xl font-black tracking-widest uppercase text-xs hover:bg-purple-500/10 transition border-purple-500/20">✨ AI 智能总结</button>
-                    </div>
-                </main>
-
-                <section class="space-y-6">
-                    <div class="flex justify-between items-center px-4">
-                        <h2 class="text-xs font-black uppercase tracking-[0.2em] text-slate-500 italic">Vault / 我的加密库</h2>
-                        <button onclick="loadList()" class="text-blue-500 text-xs font-black hover:underline uppercase">刷新列表</button>
-                    </div>
-                    <div id="notesList" class="space-y-4">
-                        <div class="text-center py-20 text-slate-600 italic text-sm">配置暗号并填入密码后点击刷新。</div>
+            <div class="flex flex-col-reverse md:grid md:grid-cols-12 gap-8 h-[calc(100vh-8rem)] animate-in fade-in slide-in-from-bottom-4 duration-700">
+                
+                <!-- Left Column: List (Vault) -->
+                <section class="md:col-span-4 lg:col-span-3 flex flex-col gap-4 min-h-0">
+                    <div class="glass p-6 rounded-[2rem] flex flex-col h-full border-white/5 shadow-2xl overflow-hidden">
+                        <div class="flex justify-between items-center px-2 pb-4 mb-2 border-b border-white/5 shrink-0">
+                            <h2 class="text-xs font-black uppercase tracking-[0.2em] text-slate-500 italic">Vault</h2>
+                             <button onclick="loadList()" class="text-blue-500 text-xs font-black hover:underline uppercase transition">🔄 刷新列表</button>
+                        </div>
+                        <div id="notesList" class="flex-1 overflow-y-auto space-y-3 pr-1">
+                            <div class="text-center py-20 text-slate-600 italic text-sm">配置暗號並填入密碼後點擊刷新。</div>
+                        </div>
                     </div>
                 </section>
-                <footer class="text-center pt-8 pb-4 opacity-50 hover:opacity-100 transition duration-500">
-                     <a href="https://www.youtube.com/@sanshicao" target="_blank" class="text-[10px] text-slate-500 font-bold hover:text-blue-400 uppercase tracking-widest transition">Built by 三十槽 | YouTube</a>
-                </footer>
+
+                <!-- Right Column: Editor & Settings -->
+                <section class="md:col-span-8 lg:col-span-9 flex flex-col gap-6">
+                    <header class="flex justify-between items-end px-2">
+                        <div class="space-y-1">
+                            <h1 class="text-4xl font-extrabold tracking-tighter bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent">CloudNotes</h1>
+                            <p class="text-[10px] uppercase tracking-[0.3em] text-blue-500 font-black">端到端加密保險庫</p>
+                        </div>
+                        <button onclick="configUrl()" class="p-4 glass rounded-2xl hover:rotate-180 transition-all duration-500 text-xl shadow-lg">⚙️</button>
+                    </header>
+
+                    <main class="glass p-8 rounded-[2.5rem] shadow-2xl space-y-6 border-white/5 flex-1 flex flex-col">
+                        <input id="mainPw" type="password" placeholder="設置解密主密碼 (Passkey)" cache-measurement="1" class="w-full bg-slate-950/50 border border-slate-800 p-5 rounded-2xl outline-none focus:ring-2 ring-blue-500/50 transition-all font-mono shrink-0">
+                        <textarea id="noteInput" placeholder="在此輸入私人內容..." class="w-full bg-slate-950/50 border border-slate-800 p-5 rounded-2xl outline-none focus:bg-slate-950 transition-all resize-none leading-relaxed flex-1 min-h-[200px]"></textarea>
+                        <div class="grid grid-cols-2 gap-4 shrink-0">
+                            <button onclick="doSave()" class="gradient-btn text-white py-5 rounded-2xl font-black tracking-widest uppercase text-xs shadow-lg shadow-blue-500/20">加密存入雲端</button>
+                            <button onclick="doAI()" class="glass text-purple-400 py-5 rounded-2xl font-black tracking-widest uppercase text-xs hover:bg-purple-500/10 transition border-purple-500/20">✨ AI 智能總結</button>
+                        </div>
+                    </main>
+
+                    <footer class="text-center py-2 opacity-50 hover:opacity-100 transition duration-500 shrink-0">
+                         <a href="https://www.youtube.com/@sanshicao" target="_blank" class="text-[10px] text-slate-500 font-bold hover:text-blue-400 uppercase tracking-widest transition">Built by 三十槽 | YouTube</a>
+                    </footer>
+                </section>
+
             </div>
         `;
         }
@@ -178,14 +190,14 @@
             <div class="glass p-12 rounded-[3rem] shadow-2xl text-center space-y-8 animate-in zoom-in duration-500">
                 <div class="text-6xl animate-bounce">🔥</div>
                 <div class="space-y-2">
-                    <h1 class="text-3xl font-black italic">阅后即焚解密</h1>
-                    <p class="text-slate-400 text-sm">解密后数据将立即从服务器物理擦除</p>
+                    <h1 class="text-3xl font-black italic">閱後即焚解密</h1>
+                    <p class="text-slate-400 text-sm">解密後數據將立即從服務器物理擦除</p>
                 </div>
-                <input id="sharePw" type="password" placeholder="请输入 6 位以上解密密码" class="w-full bg-slate-950/50 border border-slate-800 p-5 rounded-2xl outline-none focus:ring-2 ring-orange-500/50 text-center font-mono">
-                <button id="unlockBtn" onclick="doUnlockShare()" class="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:scale-[1.02] transition">解密并销毁</button>
+                <input id="sharePw" type="password" placeholder="請輸入 6 位以上解密密碼" class="w-full bg-slate-950/50 border border-slate-800 p-5 rounded-2xl outline-none focus:ring-2 ring-orange-500/50 text-center font-mono">
+                <button id="unlockBtn" onclick="doUnlockShare()" class="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:scale-[1.02] transition">解密並銷毀</button>
                 <div id="shareResult" class="mt-8 text-left p-6 bg-slate-950/50 rounded-2xl hidden whitespace-pre-wrap text-sm leading-relaxed border border-orange-500/20 ring-1 ring-orange-500/10 shadow-inner italic text-slate-300"></div>
                 <div class="pt-8 border-t border-white/5">
-                    <a href="https://www.youtube.com/@sanshicao" target="_blank" class="text-xs font-black uppercase tracking-widest text-red-500 hover:text-red-400 transition underline underline-offset-4">🎬 关注 YouTube @三十槽 学习搭建</a>
+                    <a href="https://www.youtube.com/@sanshicao" target="_blank" class="text-xs font-black uppercase tracking-widest text-red-500 hover:text-red-400 transition underline underline-offset-4">🎬 關注 YouTube @三十槽 學習搭建</a>
                 </div>
             </div>
         `;
@@ -206,44 +218,44 @@
 
         async function doSave() {
             const text = document.getElementById('noteInput').value; const pw = document.getElementById('mainPw').value;
-            if (!text || !pw) return alert("请填写内容和密码");
+            if (!text || !pw) return alert("請填寫內容和密碼");
             try {
                 const cipher = await encrypt(text, pw);
                 const res = await fetch(`${API_URL}/api/save`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': ADMIN_KEY },
                     body: JSON.stringify({ content: cipher })
                 });
-                if (res.ok) { alert("✅ 已存入安全库"); document.getElementById('noteInput').value = ""; loadList(); }
-                else alert("❌ 暗号错误");
-            } catch (e) { alert("❌ 网络连接失败"); }
+                if (res.ok) { alert("✅ 已存入安全庫"); document.getElementById('noteInput').value = ""; loadList(); }
+                else alert("❌ 暗號錯誤");
+            } catch (e) { alert("❌ 網絡連接失敗"); }
         }
 
         async function loadList() {
-            const pw = document.getElementById('mainPw').value; if (!pw) return alert("请输入密码解密");
+            const pw = document.getElementById('mainPw').value; if (!pw) return alert("請輸入密碼解密");
             const listDiv = document.getElementById('notesList');
             try {
                 const res = await fetch(`${API_URL}/api/list`, { headers: { 'Authorization': ADMIN_KEY } });
                 const notes = await res.json(); listDiv.innerHTML = "";
-                if (notes.length === 0) listDiv.innerHTML = '<div class="text-center py-20 text-slate-700 italic text-sm">暂无数据</div>';
+                if (notes.length === 0) listDiv.innerHTML = '<div class="text-center py-20 text-slate-700 italic text-sm">暫無數據</div>';
                 for (let n of notes) {
-                    const clearText = await decrypt(n.content, pw) || "🔒 [加密数据 / 密码不匹配]";
+                    const clearText = await decrypt(n.content, pw) || "🔒 [加密數據 / 密碼不匹配]";
                     const card = document.createElement('div');
                     card.className = "note-card glass p-6 rounded-3xl space-y-4 border border-white/5 shadow-lg group";
                     card.innerHTML = `
                     <div class="flex justify-between text-[9px] font-black text-slate-500 tracking-widest uppercase italic">
-                        <span>索引编号 #${n.id}</span>
+                        <span>索引編號 #${n.id}</span>
                         <span>${new Date(n.created_at).toLocaleString()}</span>
                     </div>
                     <div class="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">${clearText}</div>
                     <div class="pt-4 border-t border-white/5 flex flex-wrap gap-6 items-center">
-                        <button onclick="doShareCopy('${n.content}')" class="text-xs font-black text-blue-400 uppercase tracking-widest hover:text-blue-300 transition">📤 生成阅后即焚链接</button>
-                        <button onclick="doExport(\`${clearText.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, ${n.id})" class="text-xs font-black text-emerald-500 uppercase tracking-widest hover:text-emerald-400 transition">💾 导出备份</button>
-                        <button onclick="doDelete(${n.id})" class="text-xs font-black text-rose-500 uppercase tracking-widest ml-auto opacity-40 group-hover:opacity-100 transition">🗑️ 删除</button>
+                        <button onclick="doShareCopy('${n.content}')" class="text-xs font-black text-blue-400 uppercase tracking-widest hover:text-blue-300 transition">📤 生成閱後即焚鏈接</button>
+                        <button onclick="doExport(\`${clearText.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, ${n.id})" class="text-xs font-black text-emerald-500 uppercase tracking-widest hover:text-emerald-400 transition">💾 導出備份</button>
+                        <button onclick="doDelete(${n.id})" class="text-xs font-black text-rose-500 uppercase tracking-widest ml-auto opacity-40 group-hover:opacity-100 transition">🗑️ 刪除</button>
                     </div>
                 `;
                     listDiv.appendChild(card);
                 }
-            } catch (e) { alert("拉取失败"); }
+            } catch (e) { alert("拉取失敗"); }
         }
 
         async function doShareCopy(cipher) {
@@ -254,8 +266,8 @@
                     body: JSON.stringify({ content: cipher, public_id: pid, is_share: 1 })
                 });
                 const fullUrl = `${window.location.origin}${window.location.pathname}?share=${pid}&cfg=${btoa(API_URL)}`;
-                prompt("✅ 阅后即焚加密链接已生成：", fullUrl);
-            } catch (e) { alert("分享失败"); }
+                prompt("✅ 閱後即焚加密鏈接已生成：", fullUrl);
+            } catch (e) { alert("分享失敗"); }
         }
 
         function doExport(text, id) {
@@ -266,7 +278,7 @@
         }
 
         async function doDelete(id) {
-            if (!confirm("确定要物理抹除这条记录吗？")) return;
+            if (!confirm("確定要物理抹除這條記錄嗎？")) return;
             await fetch(`${API_URL}/api/delete`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': ADMIN_KEY },
                 body: JSON.stringify({ id: id })
@@ -275,7 +287,7 @@
         }
 
         async function doAI() {
-            const text = document.getElementById('noteInput').value; if (!text) return alert("笔记为空");
+            const text = document.getElementById('noteInput').value; if (!text) return alert("筆記為空");
             const btn = event.target; btn.innerText = "思考中..."; btn.disabled = true;
             try {
                 const res = await fetch(`${API_URL}/api/ai-sum`, {
@@ -284,18 +296,18 @@
                 });
                 const data = await res.json();
                 document.getElementById('noteInput').value += `\n\n--- ✨ AI SUMMARY ---\n${data.summary}`;
-            } finally { btn.innerText = "✨ AI 智能总结"; btn.disabled = false; }
+            } finally { btn.innerText = "✨ AI 智能總結"; btn.disabled = false; }
         }
 
         async function doUnlockShare() {
             const pw = document.getElementById('sharePw').value; const resDiv = document.getElementById('shareResult');
             try {
                 const res = await fetch(`${API_URL}/api/share/${shareId}`);
-                if (!res.ok) return alert("失效或已被焚毁");
+                if (!res.ok) return alert("失效或已被焚毀");
                 const data = await res.json(); const clearText = await decrypt(data.content, pw);
-                if (clearText) { resDiv.innerText = clearText; resDiv.classList.remove('hidden'); document.getElementById('unlockBtn').disabled = true; document.getElementById('unlockBtn').innerText = "数据已销毁"; }
-                else alert("密码错误");
-            } catch (e) { alert("网络异常"); }
+                if (clearText) { resDiv.innerText = clearText; resDiv.classList.remove('hidden'); document.getElementById('unlockBtn').disabled = true; document.getElementById('unlockBtn').innerText = "數據已銷毀"; }
+                else alert("密碼錯誤");
+            } catch (e) { alert("網絡異常"); }
         }
 
         if ('serviceWorker' in navigator) {
